@@ -11,7 +11,7 @@ homepage:      http://github.com/ekmett/fixed
 bug-reports:   http://github.com/ekmett/fixed/issues
 copyright:     Copyright (C) 2014 Edward A. Kmett
 build-type:    Simple
-tested-with:   GHC == 7.8.3
+tested-with:   GHC == 7.4.2, GHC == 7.6.3, GHC == 7.8.3
 synopsis:      Signed 15.16 precision fixed point arithmetic
 description:   Signed 15.16 precision fixed point arithmetic
 
@@ -23,10 +23,10 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: git://github.com/analytics/fixed.git
+  location: git://github.com/ekmett/fixed.git
 
 library
   hs-source-dirs: src
-  build-depends: base >= 4.3 && < 5
+  build-depends: base >= 4 && < 5
   ghc-options: -Wall -fwarn-tabs -O2
   exposed-modules: Numeric.Fixed
