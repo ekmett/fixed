@@ -1,4 +1,4 @@
-{-# LANGUAGE CApiFFI, DeriveDataTypeable #-}
+{-# LANGUAGE CApiFFI, DeriveDataTypeable, GeneralizedNewtypeDeriving #-}
 module Numeric.Fixed 
   ( Fixed(..)
   , fromFixed
@@ -10,9 +10,10 @@ import Data.Coerce
 import Data.Int
 import Data.Ratio
 import Data.Typeable
+import Foreign.Storable
 
 -- | A signed 2s complement 15.16 scale fixed precision number
-newtype {-# CTYPE "signed int" #-} Fixed = Fixed { getFixed :: Int32 } deriving (Eq,Ord,Typeable)
+newtype {-# CTYPE "signed int" #-} Fixed = Fixed { getFixed :: Int32 } deriving (Eq,Ord,Typeable,Storable)
 
 fromFixed :: Fixed -> Float
 fromFixed (Fixed x) = fromIntegral x / 65536
