@@ -1,3 +1,7 @@
+0.2.1
+-----
+* Fixed bug in `signum`
+
 0.2
 ---
 * Convert to/from Double to avoid precision issues.

@@ -30,7 +30,7 @@ instance Num Fixed where
   (-) = coerce ((-) :: CInt -> CInt -> CInt)
   negate = coerce (negate :: CInt -> CInt)
   abs = coerce (abs :: CInt -> CInt)
-  signum = coerce (signum :: CInt -> CInt)
+  signum (Fixed a) = Fixed $ unsafeShiftL (signum a) 16
   Fixed a * Fixed b = Fixed $ fromIntegral (unsafeShiftR (fromIntegral a * fromIntegral b) 16 :: Int64)
   fromInteger i = Fixed $ unsafeShiftL (fromInteger i) 16
 
