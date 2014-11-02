@@ -16,10 +16,10 @@ import Foreign.C.Types
 -- | A signed 2s complement 15.16 scale fixed precision number
 newtype {-# CTYPE "signed int" #-} Fixed = Fixed { getFixed :: CInt } deriving (Eq,Ord,Typeable,Storable)
 
-fromFixed :: Fixed -> Float
+fromFixed :: Fixed -> Double
 fromFixed (Fixed x) = fromIntegral x / 65536
 
-toFixed :: Float -> Fixed
+toFixed :: Double -> Fixed
 toFixed x = Fixed $ floor (x * 65536 + 0.5)
 
 instance Show Fixed where
