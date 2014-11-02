@@ -11,9 +11,10 @@ import Data.Int
 import Data.Ratio
 import Data.Typeable
 import Foreign.Storable
+import Foreign.C.Types
 
 -- | A signed 2s complement 15.16 scale fixed precision number
-newtype {-# CTYPE "signed int" #-} Fixed = Fixed { getFixed :: Int32 } deriving (Eq,Ord,Typeable,Storable)
+newtype {-# CTYPE "signed int" #-} Fixed = Fixed { getFixed :: CInt } deriving (Eq,Ord,Typeable,Storable)
 
 fromFixed :: Fixed -> Float
 fromFixed (Fixed x) = fromIntegral x / 65536
@@ -25,11 +26,11 @@ instance Show Fixed where
   showsPrec d = showsPrec d . fromFixed
 
 instance Num Fixed where
-  (+) = coerce ((+) :: Int32 -> Int32 -> Int32)
-  (-) = coerce ((-) :: Int32 -> Int32 -> Int32)
-  negate = coerce (negate :: Int32 -> Int32)
-  abs = coerce (abs :: Int32 -> Int32)
-  signum = coerce (signum :: Int32 -> Int32)
+  (+) = coerce ((+) :: CInt -> CInt -> CInt)
+  (-) = coerce ((-) :: CInt -> CInt -> CInt)
+  negate = coerce (negate :: CInt -> CInt)
+  abs = coerce (abs :: CInt -> CInt)
+  signum = coerce (signum :: CInt -> CInt)
   Fixed a * Fixed b = Fixed $ fromIntegral (unsafeShiftR (fromIntegral a * fromIntegral b) 16 :: Int64)
   fromInteger i = Fixed $ unsafeShiftL (fromInteger i) 16
 
