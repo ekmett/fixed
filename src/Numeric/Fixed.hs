@@ -1,6 +1,8 @@
 {-# LANGUAGE CApiFFI, DeriveDataTypeable #-}
 module Numeric.Fixed 
   ( Fixed(..)
+  , fromFixed
+  , toFixed
   ) where
 
 import Data.Bits
@@ -12,14 +14,14 @@ import Data.Typeable
 -- | A signed 2s complement 15.16 scale fixed precision number
 newtype {-# CTYPE "signed int" #-} Fixed = Fixed { getFixed :: Int32 } deriving (Eq,Ord,Typeable)
 
-toFloat :: Fixed -> Float
-toFloat (Fixed x) = fromIntegral x / 65536
+fromFixed :: Fixed -> Float
+fromFixed (Fixed x) = fromIntegral x / 65536
 
 toFixed :: Float -> Fixed
 toFixed x = Fixed $ floor (x * 65536 + 0.5)
 
 instance Show Fixed where
-  showsPrec d = showsPrec d . toFloat
+  showsPrec d = showsPrec d . fromFixed
 
 instance Num Fixed where
   (+) = coerce ((+) :: Int32 -> Int32 -> Int32)
@@ -29,6 +31,20 @@ instance Num Fixed where
   signum = coerce (signum :: Int32 -> Int32)
   Fixed a * Fixed b = Fixed $ fromIntegral (unsafeShiftR (fromIntegral a * fromIntegral b) 16 :: Int64)
   fromInteger i = Fixed $ unsafeShiftL (fromInteger i) 16
+
+instance Enum Fixed where
+  succ (Fixed a) = Fixed (a + 0x10000)
+  pred (Fixed a) = Fixed (a - 0x10000)
+  fromEnum = truncate
+  toEnum a = Fixed (unsafeShiftL (fromIntegral a) 16)
+  enumFrom a           = toFixed `map` enumFrom (fromFixed a)
+  enumFromTo a b       = toFixed `map` enumFromTo (fromFixed a) (fromFixed b)
+  enumFromThen a b     = toFixed `map` enumFromThen (fromFixed a) (fromFixed b)
+  enumFromThenTo a b c = toFixed `map` enumFromThenTo (fromFixed a) (fromFixed b) (fromFixed c)
+
+instance Bounded Fixed where
+  minBound = Fixed minBound
+  maxBound = Fixed maxBound
 
 instance Fractional Fixed where
   Fixed a / Fixed b  = Fixed $ fromIntegral (unsafeShiftL (fromIntegral a) 16 `div` fromIntegral b :: Int64)
@@ -47,3 +63,39 @@ instance RealFrac Fixed where
   round (Fixed f)   = fromIntegral $ unsafeShiftR (f + 0x800) 16 
   ceiling (Fixed f) = fromIntegral $ unsafeShiftR (f + 0xffff) 16
   floor (Fixed f)   = fromIntegral $ unsafeShiftR f 16
+
+instance Floating Fixed where
+  pi = toFixed pi
+  exp = toFixed . exp . fromFixed
+  sqrt = toFixed . sqrt . fromFixed
+  log = toFixed . log . fromFixed
+  a ** b = toFixed $ fromFixed a ** fromFixed b
+  logBase a b = toFixed $ logBase (fromFixed a) (fromFixed b)
+  sin = toFixed . sin . fromFixed
+  tan = toFixed . tan . fromFixed
+  cos = toFixed . cos . fromFixed
+  asin = toFixed . asin . fromFixed
+  atan = toFixed . atan . fromFixed
+  acos = toFixed . acos . fromFixed
+  sinh = toFixed . sinh . fromFixed
+  tanh = toFixed . tanh . fromFixed
+  cosh = toFixed . cosh . fromFixed
+  asinh = toFixed . asinh . fromFixed
+  atanh = toFixed . atanh . fromFixed
+  acosh = toFixed . acosh . fromFixed
+
+instance RealFloat Fixed where
+  floatRadix  _ = 2
+  floatDigits _ = 16
+  decodeFloat = decodeFloat . fromFixed
+  isInfinite _ = False
+  isIEEE _ = False
+  atan2 a b = toFixed $ atan2 (fromFixed a) (fromFixed b)
+  isDenormalized (Fixed a) = a .&. 0x7fff0000 /= 0
+  isNaN _ = False
+  isNegativeZero _ = False
+  floatRange _ = (15,0)
+  encodeFloat i j = toFixed $ encodeFloat i j
+  exponent = exponent . fromFixed
+  significand = toFixed . significand . fromFixed
+  scaleFloat n (Fixed a) = Fixed (shift a n)
