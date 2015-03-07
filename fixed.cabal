@@ -1,6 +1,6 @@
 name:          fixed
 category:      Numeric
-version:       0.2.1.1
+version:       0.2.1.2
 license:       BSD3
 cabal-version: >= 1.8
 license-file:  LICENSE
@@ -27,6 +27,6 @@ source-repository head
 
 library
   hs-source-dirs: src
-  build-depends: base >= 4 && < 5
+  build-depends: base >= 4.7 && < 5
   ghc-options: -Wall -fwarn-tabs -O2
   exposed-modules: Numeric.Fixed

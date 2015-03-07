@@ -1,3 +1,7 @@
+0.2.1.2
+-------
+* Acknowledge the build doesn't work on GHC < 7.8
+
 0.2.1.1
 -------
 * Minor documentation improvements
