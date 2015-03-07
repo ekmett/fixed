@@ -1,4 +1,18 @@
 {-# LANGUAGE CApiFFI, DeriveDataTypeable, GeneralizedNewtypeDeriving #-}
+-----------------------------------------------------------------------------
+-- |
+-- Copyright   :  (C) 2012-15 Edward Kmett
+-- License     :  BSD-style (see the file LICENSE)
+-- Maintainer  :  Edward Kmett <ekmett@gmail.com>
+-- Stability   :  experimental
+-- Portability :  non-portable
+--
+-- Fixed precision arithmetic. This format is the same format used by
+-- OpenGL ES 1's @GLfixed@ data type:
+--
+-- One sign bit, 15 bits to the left of the decimal place and 16 bits
+-- to the right packed into a 32-bit integer.
+-----------------------------------------------------------------------------
 module Numeric.Fixed 
   ( Fixed(..)
   , fromFixed
@@ -16,9 +30,11 @@ import Foreign.C.Types
 -- | A signed 2s complement 15.16 scale fixed precision number
 newtype {-# CTYPE "signed int" #-} Fixed = Fixed { getFixed :: CInt } deriving (Eq,Ord,Typeable,Storable)
 
+-- | Convert from a 'Fixed' precision value to a 'Double'
 fromFixed :: Fixed -> Double
 fromFixed (Fixed x) = fromIntegral x / 65536
 
+-- | Convert from a 'Double' to a 'Fixed' precision value
 toFixed :: Double -> Fixed
 toFixed x = Fixed $ floor (x * 65536 + 0.5)
 

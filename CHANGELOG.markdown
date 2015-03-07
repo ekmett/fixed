@@ -1,3 +1,7 @@
+0.2.1.1
+-------
+* Minor documentation improvements
+
 0.2.1
 -----
 * Fixed bug in `signum`
