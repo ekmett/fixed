@@ -1,10 +1,8 @@
-0.2.1.2
--------
-* Acknowledge the build doesn't work on GHC < 7.8
-
 0.2.1.1
 -------
-* Minor documentation improvements
+* Minor documentation improvements.
+* Require `base >= 4.7` properly in the source repository as the implementation uses `coerce`, so it doesn't work on GHC < 7.8.
+  This was fixed by maintenance releases to hackage previously.
 
 0.2.1
 -----
