@@ -13,7 +13,7 @@
 -- One sign bit, 15 bits to the left of the decimal place and 16 bits
 -- to the right packed into a 32-bit integer.
 -----------------------------------------------------------------------------
-module Numeric.Fixed 
+module Numeric.Fixed
   ( Fixed(..)
   , fromFixed
   , toFixed
@@ -72,13 +72,13 @@ instance Real Fixed where
   toRational (Fixed i) = toInteger i % 65536
 
 instance RealFrac Fixed where
-  properFraction (Fixed a) 
+  properFraction (Fixed a)
     | a >= 0 = (fromIntegral (unsafeShiftR a 16), Fixed (a .&. 0xffff))
     | otherwise = (negate $ fromIntegral $ unsafeShiftR (negate a) 16, Fixed $ (a .&. 0xffff) - 0x10000)
-  truncate (Fixed a) 
+  truncate (Fixed a)
     | a >= 0 = fromIntegral (unsafeShiftR a 16)
     | otherwise = negate $ fromIntegral $ unsafeShiftR (negate a) 16
-  round (Fixed f)   = fromIntegral $ unsafeShiftR (f + 0x800) 16 
+  round (Fixed f)   = fromIntegral $ unsafeShiftR (f + 0x8000) 16
   ceiling (Fixed f) = fromIntegral $ unsafeShiftR (f + 0xffff) 16
   floor (Fixed f)   = fromIntegral $ unsafeShiftR f 16
 

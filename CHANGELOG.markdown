@@ -1,3 +1,7 @@
+0.3
+---
+* Fixed an outstanding bug in round.
+
 0.2.1.1
 -------
 * Minor documentation improvements.
